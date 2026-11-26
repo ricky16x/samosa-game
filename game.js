@@ -350,34 +350,33 @@
   );
 
   let swipeStartX = null;
-  let swipeMoved = false;
+  let swipeHandled = false;
   canvas.addEventListener("pointerdown", (e) => {
     ensureAudio();
     swipeStartX = e.clientX;
-    swipeMoved = false;
+    swipeHandled = false;
   });
   canvas.addEventListener("pointermove", (e) => {
-    if (swipeStartX === null || state !== "playing") return;
+    if (swipeStartX === null || swipeHandled || state !== "playing") return;
     const dx = e.clientX - swipeStartX;
-    if (Math.abs(dx) >= 22) {
+    if (Math.abs(dx) >= 24) {
       move(dx > 0 ? 1 : -1);
-      swipeStartX = e.clientX;
-      swipeMoved = true;
+      swipeHandled = true;
     }
   });
   canvas.addEventListener("pointerup", (e) => {
-    if (swipeStartX !== null && !swipeMoved && state === "playing") {
+    if (swipeStartX !== null && !swipeHandled && state === "playing") {
       const rect = canvas.getBoundingClientRect();
       const relX = (e.clientX - rect.left) / rect.width;
       if (relX < 0.38) move(-1);
       else if (relX > 0.62) move(1);
     }
     swipeStartX = null;
-    swipeMoved = false;
+    swipeHandled = false;
   });
   canvas.addEventListener("pointercancel", () => {
     swipeStartX = null;
-    swipeMoved = false;
+    swipeHandled = false;
   });
 
   // --- KEYBOARD CONTROLS ---
