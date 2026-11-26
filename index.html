@@ -17,12 +17,12 @@
         <button id="soundBtn" class="icon-btn" aria-label="Toggle traffic and SFX">🔊 <span>ON</span></button>
       </div>
     </header>
+    <div class="hud">
+      <div><small>SCORE</small><strong id="score">000000</strong></div>
+      <div><small>DELIVERIES</small><strong id="deliveries">0 / 5</strong></div>
+      <div><small>SAMOSA TEMP</small><strong id="temp">HOT!</strong></div>
+    </div>
     <section class="game-wrap" aria-label="Game">
-      <div class="hud">
-        <div><small>SCORE</small><strong id="score">000000</strong></div>
-        <div><small>DELIVERIES</small><strong id="deliveries">0 / 5</strong></div>
-        <div><small>SAMOSA TEMP</small><strong id="temp">HOT!</strong></div>
-      </div>
       <canvas id="game" width="360" height="640" aria-label="Samosa Run game canvas"></canvas>
 
       <!-- Main / Pause / Game Over Overlay -->

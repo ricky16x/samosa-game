@@ -23,6 +23,7 @@
 
       this.engineOsc = null;
       this.engineGain = null;
+      this.rumbleSource = null;
       this.rumbleGain = null;
 
       // Optional real audio files in /assets/audio/
@@ -202,6 +203,7 @@
       rumbleFilter.connect(this.rumbleGain);
       this.rumbleGain.connect(this.trafficGain);
       rumble.start();
+      this.rumbleSource = rumble;
 
       this.engineOsc = this.ac.createOscillator();
       this.engineOsc.type = "sawtooth";
@@ -608,6 +610,33 @@
         o.start(t + i * 0.09);
         o.stop(t + i * 0.09 + 0.25);
       });
+    }
+
+    destroy() {
+      if (this.seqTimer) {
+        clearInterval(this.seqTimer);
+        this.seqTimer = null;
+      }
+      if (this.trafficTimer) {
+        clearTimeout(this.trafficTimer);
+        this.trafficTimer = null;
+      }
+      try { if (this.engineOsc) this.engineOsc.stop(); } catch (e) {}
+      try { if (this.rumbleSource) this.rumbleSource.stop(); } catch (e) {}
+      this.engineOsc = null;
+      this.rumbleSource = null;
+      if (this.realMusicEl) {
+        this.realMusicEl.pause();
+        this.realMusicEl.src = "";
+      }
+      if (this.realTrafficEl) {
+        this.realTrafficEl.pause();
+        this.realTrafficEl.src = "";
+      }
+      if (this.ac) {
+        this.ac.close().catch(() => {});
+        this.ac = null;
+      }
     }
   }
 

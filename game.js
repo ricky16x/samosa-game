@@ -104,11 +104,13 @@
   }
 
   function addPopup(x, y, text, color = "#ffd45a") {
+    if (popups.length >= 12) popups.shift();
     popups.push({ x, y, text, color, life: 0.9, maxLife: 0.9 });
   }
 
   function spawnParticles(x, y, color, count = 8, spreadX = 90, minVy = -120, maxVy = 40) {
     for (let i = 0; i < count; i++) {
+      if (particles.length >= 70) particles.shift();
       particles.push({
         x,
         y,
@@ -1351,14 +1353,39 @@
   }
 
   let last = performance.now();
+  let rafId = null;
+  let destroyed = false;
+
   function loop(now) {
+    if (destroyed) return;
     const dt = Math.min(0.04, (now - last) / 1000 || 0);
     last = now;
     update(dt);
     render();
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
+  function destroyGame() {
+    if (destroyed) return;
+    destroyed = true;
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    obstacles.length = 0;
+    items.length = 0;
+    particles.length = 0;
+    popups.length = 0;
+    keysDown.clear();
+    if (Audio && Audio.destroy) Audio.destroy();
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && state === "playing") pause();
+  });
+  window.addEventListener("pagehide", destroyGame);
+  window.addEventListener("beforeunload", destroyGame);
+
   configureOverlay("menu");
-  requestAnimationFrame(loop);
+  rafId = requestAnimationFrame(loop);
 })();
