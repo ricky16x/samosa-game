@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#171426">
+  <title>The Great Samosa Run</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">▲</span><div><strong>THE GREAT</strong><b>SAMOSA RUN</b></div></div>
+      <div class="audio-toggles">
+        <button id="helpBtn" class="icon-btn" aria-label="How to play and help">?</button>
+        <button id="musicBtn" class="icon-btn" aria-label="Toggle BG music">🎵 <span>ON</span></button>
+        <button id="soundBtn" class="icon-btn" aria-label="Toggle traffic and SFX">🔊 <span>ON</span></button>
+      </div>
+    </header>
+    <section class="game-wrap" aria-label="Game">
+      <div class="hud">
+        <div><small>SCORE</small><strong id="score">000000</strong></div>
+        <div><small>DELIVERIES</small><strong id="deliveries">0 / 5</strong></div>
+        <div><small>SAMOSA TEMP</small><strong id="temp">HOT!</strong></div>
+      </div>
+      <canvas id="game" width="360" height="640" aria-label="Samosa Run game canvas"></canvas>
+
+      <!-- Main / Pause / Game Over Overlay -->
+      <div id="overlay" class="overlay">
+        <div class="panel">
+          <div class="mascot" id="overlayMascot">🛵</div>
+          <p class="eyebrow" id="overlayEyebrow">DELHI • PEAK TRAFFIC HOURS</p>
+          <h1 id="overlayTitle">THE GREAT<br><em>SAMOSA RUN</em></h1>
+          <p id="overlayText">Five hungry customers. One brave delivery rider. A whole city standing in your way.</p>
+          <div id="howtoBox" class="howto">
+            <span>◀ ▶</span> STEER (A/D • SWIPE)<br>
+            <span>🔥</span> BOOST (W/SPACE • HOLD)<br>
+            <small>UTTAM NAGAR → RAJOURI → KAROL BAGH → CP → INDIA GATE</small>
+          </div>
+          <button id="startBtn" class="start-btn">START DELIVERY <span>➜</span></button>
+          <div id="pauseActions" class="sub-actions hidden">
+            <button id="restartBtn" class="sub-btn">↻ RESTART</button>
+            <button id="pauseHelpBtn" class="sub-btn">? HELP</button>
+          </div>
+          <div id="contactRow" class="contact-row hidden">
+            <button id="contactBtn" class="contact-btn">✉ CONTACT THE DEV</button>
+          </div>
+          <p class="best">PERSONAL BEST <b id="best">000000</b></p>
+        </div>
+      </div>
+
+      <!-- Help Modal with In-Game Icons -->
+      <div id="helpOverlay" class="overlay hidden">
+        <div class="panel modal-panel">
+          <p class="eyebrow">RIDER HANDBOOK</p>
+          <h2>HOW TO <em>PLAY</em></h2>
+          <div class="help-list">
+            <p><b>CONTROLS:</b> Tap ◀/▶, swipe road, or use <code>A/D</code> &amp; Arrows. Hold 🔥 or <code>W/Space</code> to Boost, <code>S/▼</code> to Brake, <code>P</code> to Pause.</p>
+            <div class="legend-title">PICKUPS</div>
+            <div class="legend-grid">
+              <div class="legend-item"><canvas class="legend-icon" data-icon="chai" width="32" height="32"></canvas><span><b>Chai:</b> +Heat &amp; Boost</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="samosa" width="32" height="32"></canvas><span><b>Samosa:</b> +Score</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="mirchi" width="32" height="32"></canvas><span><b>Mirchi:</b> Turbo Smash</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="bike" width="32" height="32"></canvas><span><b>Bike:</b> 100m Speed</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="car" width="32" height="32"></canvas><span><b>Car:</b> 100m Armor</span></div>
+            </div>
+            <div class="legend-title">HAZARDS</div>
+            <div class="legend-grid">
+              <div class="legend-item"><canvas class="legend-icon" data-icon="auto" width="32" height="32"></canvas><span><b>Auto:</b> Slows lane</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="bus" width="32" height="32"></canvas><span><b>DTC Bus:</b> Wide rig</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="cow" width="32" height="32"></canvas><span><b>Cow:</b> Holy roadblock</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="puddle" width="32" height="32"></canvas><span><b>Puddle:</b> Soggy -12 Heat!</span></div>
+              <div class="legend-item"><canvas class="legend-icon" data-icon="baraat" width="32" height="32"></canvas><span><b>Baraat:</b> 1 open lane</span></div>
+            </div>
+            <p style="margin-top:8px"><b>ROUTE (WEST → CENTRAL):</b> Uttam Nagar → Janakpuri → Rajouri → Karol Bagh → CP → India Gate!</p>
+          </div>
+          <button id="closeHelpBtn" class="start-btn">GOT IT! <span>✓</span></button>
+        </div>
+      </div>
+
+      <!-- Contact Dev Modal -->
+      <div id="contactOverlay" class="overlay hidden">
+        <div class="panel modal-panel">
+          <p class="eyebrow">DELHI GARAGE</p>
+          <h2>CONTACT <em>THE DEV</em></h2>
+          <p class="contact-desc">Found a bug, want to suggest a Delhi landmark, or drop feedback on The Great Samosa Run?</p>
+          <div class="contact-links">
+            <a href="mailto:dev@samosarun.local?subject=The%20Great%20Samosa%20Run%20Feedback" class="sub-btn link-btn">✉ EMAIL DEV</a>
+            <button id="copyContactBtn" class="sub-btn">📋 COPY INFO</button>
+          </div>
+          <button id="closeContactBtn" class="start-btn" style="margin-top:12px">BACK <span>➜</span></button>
+        </div>
+      </div>
+
+      <button id="pauseBtn" class="pause-btn" aria-label="Pause game">Ⅱ</button>
+      <div id="toast" class="toast"></div>
+    </section>
+    <section class="controls" aria-label="Touch and arcade controls">
+      <button id="leftBtn" class="drive-btn" aria-label="Move left">◀</button>
+      <button id="boostBtn" class="drive-btn boost-btn" aria-label="Chai boost">🔥 <span>BOOST</span></button>
+      <button id="rightBtn" class="drive-btn" aria-label="Move right">▶</button>
+    </section>
+    <footer><span>KEYS: WASD / ARROWS / SPACE</span><span>V2.6 • DELHI EDITION</span></footer>
+  </main>
+  <script src="/audio.js"></script>
+  <script src="/game.js"></script>
+</body>
+</html>
