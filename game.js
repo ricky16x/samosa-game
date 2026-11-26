@@ -423,6 +423,34 @@
     }
   });
 
+  // --- FULLSCREEN PROMPT ---
+  function requestFull() {
+    const el = document.documentElement;
+    const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (!fn) return Promise.reject();
+    return Promise.resolve(fn.call(el));
+  }
+
+  function showFsDeclined() {
+    $("fsTitle").innerHTML = "OH <em>NO!</em>";
+    $("fsText").textContent = "Sorry, Delhi people have big hearts, big ego, and a big screen!";
+    $("fsYesBtn").textContent = "⛶ OK, FULLSCREEN";
+    $("fsNoBtn").classList.add("hidden");
+    $("fsContinueBtn").classList.remove("hidden");
+  }
+
+  $("fsYesBtn").addEventListener("click", () => {
+    ensureAudio();
+    requestFull()
+      .then(() => { $("fsOverlay").classList.add("hidden"); })
+      .catch(() => { $("fsOverlay").classList.add("hidden"); });
+  });
+  $("fsNoBtn").addEventListener("click", showFsDeclined);
+  $("fsContinueBtn").addEventListener("click", () => {
+    ensureAudio();
+    $("fsOverlay").classList.add("hidden");
+  });
+
   // --- UI & MODAL HANDLERS ---
   $("startBtn").addEventListener("click", () => (state === "paused" ? pause() : start()));
   $("pauseBtn").addEventListener("click", pause);
@@ -613,7 +641,7 @@
 
     if (Audio) Audio.updateEngine((curSpeed - 180) / 400, isBoosting);
 
-    score += dt * (isBoosting ? 26 : 12) * (1 + (combo - 1) * 0.2);
+    score += dt * (isBoosting ? 7 : 3) * (1 + (combo - 1) * 0.15);
     roadOffset = (roadOffset + curSpeed * dt) % 80;
     heat = Math.max(0, heat - dt * (isBoosting ? 0.65 : 1.05));
 
@@ -641,12 +669,12 @@
       if (!dropoff.delivered && dropoff.y >= player.y - 25) {
         dropoff.delivered = true;
         deliveries++;
-        const kerbBonus = player.lane === 2 ? 50 : 0;
-        const pts = 150 + kerbBonus;
+        const kerbBonus = player.lane === 2 ? 25 : 0;
+        const pts = 80 + kerbBonus;
         score += pts;
         heat = Math.min(100, heat + 14);
-        nextDeliveryAt = elapsed + 12.5;
-        toast(kerbBonus ? "CURBSIDE DELIVERY! +200" : "ORDER DELIVERED! +150");
+        nextDeliveryAt = elapsed + 14;
+        toast(kerbBonus ? "CURBSIDE DELIVERY! +105" : "ORDER DELIVERED! +80");
         addPopup(player.x, player.y - 36, `+${pts}`, "#7ee0b5");
         spawnParticles(310, dropoff.y, "#ffd45a", 14, 80, -140, 20);
         if (Audio) Audio.playDeliver();
@@ -744,7 +772,7 @@
         o.nearMissed = true;
         combo = Math.min(8, combo + 1);
         comboTimer = 3.2;
-        const pts = 25 * combo;
+        const pts = 12 * combo;
         score += pts;
         boostMeter = Math.min(100, boostMeter + 12);
         addPopup(player.x, player.y - 34, `CLOSE CALL x${combo}! +${pts}`, "#ffd45a");
@@ -753,7 +781,7 @@
 
       if (!o.passed && o.y > player.y + 38) {
         o.passed = true;
-        score += 12;
+        score += 5;
       }
     }
     obstacles = obstacles.filter((o) => o.y < H + 95);
@@ -787,7 +815,7 @@
           toast("100m TURBO CAR!");
           addPopup(player.x, player.y - 34, "100m ARMOR!", "#7ee0b5");
         } else {
-          const pts = 30 * combo;
+          const pts = 15 * combo;
           score += pts;
           addPopup(player.x, player.y - 30, `SAMOSA +${pts}`, "#ffb64d");
         }
