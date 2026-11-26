@@ -445,10 +445,10 @@
   });
   $("closeContactBtn").addEventListener("click", () => $("contactOverlay").classList.add("hidden"));
   $("copyContactBtn").addEventListener("click", () => {
-    const info = `The Great Samosa Run (Delhi Edition) | Dev: dev@samosarun.local | Best: ${best}`;
+    const info = `The Great Samosa Run | Email: rounakdey_1@proton.me | LinkedIn: https://linkedin.com/in/rickyxr | Best: ${best}`;
     if (navigator.clipboard) navigator.clipboard.writeText(info).catch(() => {});
     $("copyContactBtn").textContent = "✓ COPIED!";
-    setTimeout(() => { $("copyContactBtn").textContent = "📋 COPY INFO"; }, 1200);
+    setTimeout(() => { $("copyContactBtn").textContent = "📋 COPY CONTACT"; }, 1200);
   });
 
   function toggleMusic() {
